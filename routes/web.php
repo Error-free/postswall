@@ -16,6 +16,10 @@ use Illuminate\Http\Request;
 
 
 Route::get('/', function () {
+	return view('posts');
+});
+
+Route::get('/posts', function () {
 
 	$query = Post::orderBy('created_at', 'desc');
 
@@ -23,23 +27,17 @@ Route::get('/', function () {
 		$query->where('is_private', false);
 	}
 
-	$posts = $query->get();
-
-	return view('posts', [
-		'posts' => $posts
-	]);
+	return $query->with('user')->get()->toJson();
 });
 
-Route::post('/post', function (Request $request) {
+Route::post('/send', function (Request $request) {
 	$validator = Validator::make($request->all(), [
 		'message' => 'required|max:255',
-		'is_private' => 'nullable|numeric|min:0|max:1',
+		'is_private' => 'boolean',
 		'id' => 'nullable|numeric|min:0',
 	]);
 	if ($validator->fails()) {
-		return redirect('/')
-			->withInput()
-			->withErrors($validator);
+		return response()->json(['errors' => $validator->errors()]);
 	}
 
 	$id = (int) $request->id;
@@ -54,12 +52,12 @@ Route::post('/post', function (Request $request) {
 	$post->message = $request->message;
 	$post->save();
 
-	return redirect('/');
+	return 'success';
 })->middleware('auth');
 
 Route::delete('/post/{id}', function ($id) {
 	Post::where('user_id', Auth::id())->findOrFail($id)->delete();
-	return redirect('/');
+	return 'success';
 })->middleware('auth');
 
 Auth::routes();

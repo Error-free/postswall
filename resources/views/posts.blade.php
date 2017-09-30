@@ -5,51 +5,31 @@
     <div class="span2"></div>
     <div class="span8">
 
-        <form action="{{ url('post')}}" method="POST" class="form-horizontal" style="margin-bottom: 50px;">
-            {{ csrf_field() }}
+        <div id="app" v-on:onload="window.app.loadPostList()">
 
-            <input type="hidden" value="0" name="id" />
-
-            @if ($errors->has('message'))
-                <div class="alert alert-error">
-                    {{ $errors->first('message') }}
-                </div>
-            @endif
-
-            <div class="control-group">
-                <textarea style="width: 100%; height: 50px;" id="message" placeholder="Ваше сообщение..." name="message"></textarea>
+            <div class="alert alert-error" v-show="postForm.messageError">
+                @{{postForm.messageError}}
             </div>
 
             <div class="control-group">
-                <button type="submit" class="btn btn-primary">Отправить сообщение</button>
-                <input type="checkbox" name="is_private" value="1"> Приватное
+                <textarea style="width: 100%; height: 50px;" id="message" placeholder="Ваше сообщение..." name="message" v-model="postForm.message"></textarea>
             </div>
-        </form>
 
-        @foreach ($posts as $post)
+            <div class="control-group">
+                <button class="btn btn-primary" v-on:click="sendPost">Отправить сообщение</button>
+                <input type="checkbox" name="is_private" value="1" v-model="postForm.is_private"> Приватное
+                <button class="btn" v-on:click="clearPostData" v-show="postForm.id">Отменить редактирование</button>
+            </div>
 
-        <div class="well">
-            <h5>{{ $post->user->name }}:</h5>
-
-            {{ $post->decodedMessage }}
-
-            <br />{{ $post->created_at }}
-
-            <form action="{{ url('post/'.$post->id) }}" method="POST">
-                {{ csrf_field() }}
-                {{ method_field('DELETE') }}
-
-                <button type="submit" class="btn btn-danger">
-                    Delete
-                </button>
-            </form>
-
-            <button class="btn">
-                Edit
-            </button>
+            <post-item
+                  v-for="(item, index) in postList"
+                  v-bind:post="item"
+                  v-bind:index="index"
+                  v-bind:key="item.id"
+                  >
+            </post-item>
         </div>
 
-        @endforeach
     </div>
 </div>
 @endsection

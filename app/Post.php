@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+	protected $appends = ['decodedMessage', 'username'];
+
 	public static function boot()
 	{
 		parent::boot();
@@ -24,6 +26,11 @@ class Post extends Model
 			$message = decrypt($this->message);
 		}
 		return $message;
+	}
+
+	public function getUsernameAttribute()
+	{
+		return $this->user->name;
 	}
 
 	/**
