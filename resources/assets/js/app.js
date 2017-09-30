@@ -28,7 +28,7 @@ Vue.component('post-item', {
 
 					{{ post.decodedMessage }}
 
-					<div>
+					<div v-show="user_id == post.user_id">
 						<button class="btn btn-danger" v-on:click="del(post, index)">
 							Удалить
 						</button>
@@ -40,7 +40,7 @@ Vue.component('post-item', {
 
 					{{ post.created_at }}
 				</div>`,
-	props: ['post', 'index'],
+	props: ['post', 'index', 'user_id'],
 	methods: {
 		edit: function (post) {
 			window.app.postForm = {
@@ -75,7 +75,8 @@ window.app = new Vue({
 			message: "",
 			messageError: "",
 			is_private: false
-		}
+		},
+		user_id: 0
 	},
 	methods: {
 		loadPostList: function () {
@@ -114,6 +115,7 @@ window.app = new Vue({
 		}
 	},
 	mounted: function() {
+		this.user_id = window.user_id;
 		this.loadPostList();
 	}
 });

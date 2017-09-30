@@ -809,8 +809,8 @@ axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('#csrf-to
 Vue.component('example', __webpack_require__(36));
 
 Vue.component('post-item', {
-	template: '\t<div class="well">\n\t\t\t\t\t<h5>{{ post.username }}:</h5>\n\n\t\t\t\t\t{{ post.decodedMessage }}\n\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<button class="btn btn-danger" v-on:click="del(post, index)">\n\t\t\t\t\t\t\t\u0423\u0434\u0430\u043B\u0438\u0442\u044C\n\t\t\t\t\t\t</button>\n\n\t\t\t\t\t\t<button class="btn" v-on:click="edit(post)">\n\t\t\t\t\t\t\t\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t{{ post.created_at }}\n\t\t\t\t</div>',
-	props: ['post', 'index'],
+	template: '\t<div class="well">\n\t\t\t\t\t<h5>{{ post.username }}:</h5>\n\n\t\t\t\t\t{{ post.decodedMessage }}\n\n\t\t\t\t\t<div v-show="user_id == post.user_id">\n\t\t\t\t\t\t<button class="btn btn-danger" v-on:click="del(post, index)">\n\t\t\t\t\t\t\t\u0423\u0434\u0430\u043B\u0438\u0442\u044C\n\t\t\t\t\t\t</button>\n\n\t\t\t\t\t\t<button class="btn" v-on:click="edit(post)">\n\t\t\t\t\t\t\t\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t{{ post.created_at }}\n\t\t\t\t</div>',
+	props: ['post', 'index', 'user_id'],
 	methods: {
 		edit: function edit(post) {
 			window.app.postForm = {
@@ -841,7 +841,8 @@ window.app = new Vue({
 			message: "",
 			messageError: "",
 			is_private: false
-		}
+		},
+		user_id: 0
 	},
 	methods: {
 		loadPostList: function loadPostList() {
@@ -876,6 +877,7 @@ window.app = new Vue({
 		}
 	},
 	mounted: function mounted() {
+		this.user_id = window.user_id;
 		this.loadPostList();
 	}
 });

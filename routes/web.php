@@ -16,6 +16,11 @@ use Illuminate\Http\Request;
 
 
 Route::get('/', function () {
+
+	JavaScript::put([
+		'user_id' => Auth::check() ? Auth::id() : 0,
+	]);
+
 	return view('posts');
 });
 
