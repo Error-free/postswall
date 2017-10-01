@@ -13,8 +13,8 @@ class DatabaseSeeder extends Seeder
 	{
 		$catQuantity = 2;
 		$brandQuantity = 2;
-		$propQuantity = 1;
-		$propValQuantity = 2;
+		$propQuantity = 2;
+		$propValPerPropertyQuantity = 2;
 
 		for($i = 1; $i <= $brandQuantity; $i++) {
 			DB::table('brands')->insert([
@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
 
 		$i = 0;
 		for($pi = 1; $pi <= $propQuantity; $pi++) {
-			for($pvi = 1; $pvi <= $propValQuantity; $pvi++) {
+			for($pvi = 1; $pvi <= $propValPerPropertyQuantity; $pvi++) {
 				$i++;
 				DB::table('property_values')->insert([
 					'id' => $i,
@@ -62,13 +62,18 @@ class DatabaseSeeder extends Seeder
 				]);
 			}
 		}
+		$propValQuantity = $i;
 
-		for($i = 1; $i <= $productQuantity; $i++) {
-			DB::table('products_property_values')->insert([
-				'id' => $i,
-				'product_id' => $i,
-				'property_value_id' => mt_rand(1, $propValQuantity)
-			]);
+		$i = 0;
+		for($pi = 1; $pi <= $productQuantity; $pi++) {
+			for($pvi = 1; $pvi <= $propValQuantity; $pvi++) {
+				$i++;
+				DB::table('products_property_values')->insert([
+					'id' => $i,
+					'product_id' => $pi,
+					'property_value_id' => $pvi
+				]);
+			}
 		}
 	}
 }
