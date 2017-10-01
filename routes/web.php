@@ -11,81 +11,10 @@
 |
 */
 
-use App\Post;
-use Illuminate\Http\Request;
-
-
-Route::get('/', function () {
-
-	JavaScript::put([
-		'user_id' => Auth::check() ? Auth::id() : 0,
-	]);
-
-	return view('posts');
-});
-
-Route::get('/posts', function () {
-
-	$query = Post::orderBy('created_at', 'desc');
-
-	if(!Auth::check()) {
-		$query->where('is_private', false);
-	}
-
-	return $query->with('user')->get()->toJson();
-});
-
-Route::post('/send', function (Request $request) {
-	$validator = Validator::make($request->all(), [
-		'message' => 'required|max:255',
-		'is_private' => 'boolean',
-		'id' => 'nullable|numeric|min:0',
-	]);
-	if ($validator->fails()) {
-		return response()->json(['errors' => $validator->errors()]);
-	}
-
-	$id = (int) $request->id;
-	if($id) {
-		$post = Post::where('user_id', Auth::id())->findOrFail($id);
-	} else {
-		$post = new Post;
-		$post->user_id = Auth::id();
-	}
-
-	$old_is_private = $post->is_private;
-
-	$post->is_private = (int) $request->is_private;
-	$post->message = $request->message;
-	$post->save();
-
-	if($post->is_private && $old_is_private) {
-		event(new \App\Events\PrivateWallUpdated());
-	} else {
-		event(new \App\Events\PrivateWallUpdated());
-		event(new \App\Events\WallUpdated());
-	}
-
-	return 'success';
-})->middleware('auth');
-
-Route::delete('/post/{id}', function ($id) {
-
-	$post = Post::where('user_id', Auth::id())->findOrFail($id);
-
-	$is_private = $post->is_private;
-
-	$post->delete();
-
-	if($is_private) {
-		event(new \App\Events\PrivateWallUpdated());
-	} else {
-		event(new \App\Events\PrivateWallUpdated());
-		event(new \App\Events\WallUpdated());
-	}
-
-	return 'success';
-})->middleware('auth');
+Route::get('/', 'PostController@index');
+Route::get('/posts', 'PostController@posts');
+Route::post('/send', 'PostController@send');
+Route::delete('/post/{id}', 'PostController@delete');
 
 Auth::routes();
 
