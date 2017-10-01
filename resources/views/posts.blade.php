@@ -19,7 +19,7 @@
 
                 <div class="control-group">
                     <button class="btn btn-primary" v-on:click="sendPost">Отправить сообщение</button>
-                    <input type="checkbox" name="is_private" value="1" v-model="postForm.is_private"> Приватное
+                    <input type="checkbox" name="is_private" value="1" v-model="postForm.is_private" id="is_private"> <label for="is_private" class="help-inline">Приватное</label>
                     <button class="btn" v-on:click="clearPostData" v-show="postForm.id">Отменить редактирование</button>
                 </div>
 

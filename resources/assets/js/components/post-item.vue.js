@@ -14,7 +14,9 @@ Vue.component('post-item', {
 						</button>
 					</div>
 
-					{{ post.created_at }}
+					<div>
+						{{ post.created_at }}
+					</div>
 				</div>`,
 	props: ['post', 'index', 'user_id'],
 	methods: {

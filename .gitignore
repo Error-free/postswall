@@ -12,3 +12,4 @@ yarn-error.log
 .env
 postswall.sublime-project
 postswall.sublime-workspace
+/public/js/app.js
