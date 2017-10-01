@@ -4,9 +4,10 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-
+import Echo from 'laravel-echo'
 
 require('./bootstrap');
+
 
 window.Vue = require('vue');
 
@@ -112,10 +113,29 @@ window.app = new Vue({
 				messageError: "",
 				is_private: false
 			};
+		},
+		subscribe: function () {
+			window.Echo = new Echo({
+			    broadcaster: 'socket.io',
+			    host: window.location.hostname + ':6001'
+			});
+
+			if(this.user_id != 0) {
+				window.Echo.private('posts-wall')
+				    .listen('PrivateWallUpdated', (e) => {
+				        window.app.loadPostList();
+				    });
+			} else {
+				window.Echo.channel('posts-wall')
+				    .listen('WallUpdated', (e) => {
+				        window.app.loadPostList();
+				    });
+			}
 		}
 	},
 	mounted: function() {
 		this.user_id = window.user_id;
 		this.loadPostList();
+		this.subscribe();
 	}
 });

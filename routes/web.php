@@ -53,15 +53,37 @@ Route::post('/send', function (Request $request) {
 		$post->user_id = Auth::id();
 	}
 
+	$old_is_private = $post->is_private;
+
 	$post->is_private = (int) $request->is_private;
 	$post->message = $request->message;
 	$post->save();
+
+	if($post->is_private && $old_is_private) {
+		event(new \App\Events\PrivateWallUpdated());
+	} else {
+		event(new \App\Events\PrivateWallUpdated());
+		event(new \App\Events\WallUpdated());
+	}
 
 	return 'success';
 })->middleware('auth');
 
 Route::delete('/post/{id}', function ($id) {
-	Post::where('user_id', Auth::id())->findOrFail($id)->delete();
+
+	$post = Post::where('user_id', Auth::id())->findOrFail($id);
+
+	$is_private = $post->is_private;
+
+	$post->delete();
+
+	if($is_private) {
+		event(new \App\Events\PrivateWallUpdated());
+	} else {
+		event(new \App\Events\PrivateWallUpdated());
+		event(new \App\Events\WallUpdated());
+	}
+
 	return 'success';
 })->middleware('auth');
 
