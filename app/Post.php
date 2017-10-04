@@ -6,26 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-	protected $appends = ['decodedMessage', 'username'];
+	protected $appends = ['username'];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'updated_at', 'user'
+    ];
 
 	public static function boot()
 	{
 		parent::boot();
-
-		Post::saving(function ($post) {
-			if($post->is_private) {
-				$post->message = encrypt($post->message);
-			}
-		});
-	}
-
-	public function getDecodedMessageAttribute()
-	{
-		$message = $this->message;
-		if($this->is_private) {
-			$message = decrypt($this->message);
-		}
-		return $message;
 	}
 
 	public function getUsernameAttribute()

@@ -34,10 +34,13 @@ class PostController extends Controller
      */
     public function posts()
     {
-        $query = Post::orderBy('created_at', 'desc');
+        $query = Post::orderBy('created_at', 'desc')->where('is_private', false);
 
-        if(!Auth::check()) {
-            $query->where('is_private', false);
+        if(Auth::check()) {
+            $query->orWhere([
+                ['is_private', '=', true],
+                ['user_id', '=', Auth::id()]
+            ]);
         }
 
         return $query->with('user')->get()->toJson();
@@ -72,10 +75,7 @@ class PostController extends Controller
         $post->message = $request->message;
         $post->save();
 
-        if($post->is_private && $old_is_private) {
-            event(new \App\Events\PrivateWallUpdated());
-        } else {
-            event(new \App\Events\PrivateWallUpdated());
+        if(!$post->is_private || ($old_is_private === 0)) {
             event(new \App\Events\WallUpdated());
         }
 
@@ -94,10 +94,7 @@ class PostController extends Controller
 
         $post->delete();
 
-        if($is_private) {
-            event(new \App\Events\PrivateWallUpdated());
-        } else {
-            event(new \App\Events\PrivateWallUpdated());
+        if(!$is_private) {
             event(new \App\Events\WallUpdated());
         }
 

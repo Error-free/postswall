@@ -11,6 +11,6 @@
 |
 */
 
-Broadcast::channel('posts-wall', function ($user) {
-    return Auth::check();
-});
+// Broadcast::channel('posts-wall', function ($user) {
+//     return Auth::check();
+// });

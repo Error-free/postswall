@@ -2,7 +2,7 @@ Vue.component('post-item', {
 	template: `	<div class="well">
 					<h5>{{ post.username }}:</h5>
 
-					{{ post.decodedMessage }}
+					{{ post.message }}
 
 					<div v-show="user_id == post.user_id">
 						<button class="btn btn-danger" v-on:click="del(post, index)">
@@ -23,7 +23,7 @@ Vue.component('post-item', {
 		edit: function (post) {
 			window.app.postForm = {
 				id: post.id,
-				message: post.decodedMessage,
+				message: post.message,
 				messageError: "",
 				is_private: post.is_private
 			};

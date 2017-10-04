@@ -53,17 +53,10 @@ window.app = new Vue({
 			    host: window.location.hostname + ':6001'
 			});
 
-			if(this.user_id != 0) {
-				window.Echo.private('posts-wall')
-				    .listen('PrivateWallUpdated', (e) => {
-				        window.app.loadPostList();
-				    });
-			} else {
-				window.Echo.channel('posts-wall')
-				    .listen('WallUpdated', (e) => {
-				        window.app.loadPostList();
-				    });
-			}
+			window.Echo.channel('posts-wall')
+			    .listen('WallUpdated', (e) => {
+			        window.app.loadPostList();
+			    });
 		}
 	},
 	mounted: function() {
