@@ -96,7 +96,7 @@ window.app = new Vue({
 			} else {
 				this.decryptPosts();
 			}
-
+			localStorage.setItem('password', this.cypher.password);
 			this.showModal = false;
 		},
 		subscribe: function () {
@@ -112,6 +112,7 @@ window.app = new Vue({
 		}
 	},
 	mounted: function() {
+		this.cypher.password = localStorage.getItem('password');
 		this.user_id = window.user_id;
 		this.loadPostList();
 		this.subscribe();
