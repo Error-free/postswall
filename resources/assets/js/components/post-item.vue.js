@@ -2,7 +2,7 @@ Vue.component('post-item', {
 	template: `	<div class="well">
 					<h5>{{ post.username }}:</h5>
 
-					{{ post.message }}
+					{{ post.decryptedMessage }}
 
 					<div v-show="user_id == post.user_id">
 						<button class="btn btn-danger" v-on:click="del(post, index)">

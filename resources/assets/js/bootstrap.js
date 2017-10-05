@@ -33,3 +33,5 @@ let token = document.querySelector('#csrf-token').getAttribute('content');
 
 window.axios = require('axios');
 axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+
+window.cryptojs = require("crypto-js");

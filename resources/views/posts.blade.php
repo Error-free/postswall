@@ -19,14 +19,37 @@
 
                 <div class="control-group">
                     <button class="btn btn-primary" v-on:click="sendPost">Отправить сообщение</button>
-                    <input type="checkbox" name="is_private" value="1" v-model="postForm.is_private" id="is_private"> <label for="is_private" class="help-inline">Приватное</label>
+                    <span v-show="cypher.password">
+                        <input type="checkbox" name="is_private" value="1" v-model="postForm.is_private" id="is_private"> <label for="is_private" class="help-inline">Приватное</label>
+                    </span>
                     <button class="btn" v-on:click="clearPostData" v-show="postForm.id">Отменить редактирование</button>
+                    <button id="show-modal" class="btn" @click="showModal = true">Ключ шифрования</button>
                 </div>
 
+                
+                <modal v-if="showModal" @close="showModal = false">
+                  <!--
+                    you can use custom content here to overwrite
+                    default content
+                  -->
+                  <h3 slot="header">Ключ шифрования</h3>
+                  <div slot="body">
+                      <input class="cypher-button" type="password" v-model="passwordInput" />
+                  </div>
+                  <div slot="footer">
+                      <button class="btn btn-primary" @click="setPassword">
+                        ОК
+                      </button>
+                      <button class="btn btn-primary" @click="showModal = false">
+                        Закрыть
+                      </button>
+                  </div>
+
+                </modal>
             </div>
 
             <post-item
-                  v-for="(item, index) in postList"
+                  v-for="(item, index) in filteredPosts"
                   v-bind:post="item"
                   v-bind:index="index"
                   v-bind:key="item.id"

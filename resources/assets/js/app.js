@@ -13,3 +13,7 @@ window.Vue = require('vue');
 
 require('./components/post-item.vue');
 require('./components/app.vue');
+
+Vue.component('modal', {
+  template: '#modal-template'
+});
