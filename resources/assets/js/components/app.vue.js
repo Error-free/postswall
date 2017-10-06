@@ -85,7 +85,7 @@ window.app = new Vue({
 			if(oldPassword) {
 				var app = window.app;
 				this.postList.forEach(function(el, k) {
-					if(app.postList[k].is_private && oldPassword != '') {
+					if(app.postList[k].is_private && app.postList[k].decryptedMessage != '') {
 						axios.post('send', {
 								id: app.postList[k].id,
 								message: window.cryptojs.AES.encrypt(app.postList[k].decryptedMessage, app.cypher.password).toString(),
