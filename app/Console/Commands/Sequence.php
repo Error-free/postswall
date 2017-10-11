@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use App\Components\SequenceWriter;
 
 class Sequence extends Command
 {
@@ -44,7 +43,7 @@ class Sequence extends Command
 	 */
 	public function handle()
 	{
-		$writer = new SequenceWriter;
+		$writer = resolve('App\Components\SequenceWriter');
 		$writer->print($this->option('template'), $this->option('delimeter'));
 	}
 }
